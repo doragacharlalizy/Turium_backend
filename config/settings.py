@@ -27,9 +27,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-x_4(h8^_wj%)5j&%qzmluh-gr_)8uhsdjc=f)e7e0k-+=vtcol')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG', 'True') == 'True'
-
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '*']
+DEBUG = False
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '*','.onrender.com']
 
 # ============================================================================
 # OPENAI API KEY (CRITICAL - SET THIS FIRST!)
@@ -64,6 +63,8 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',  # Must be at top
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -101,19 +102,29 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # ============================================================================
 # Using PostgreSQL with your provided credentials
 
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": os.getenv('DB_NAME', 'ai_knowledge_inbox'),
+#         "USER": os.getenv('DB_USER', 'postgres'),
+#         "PASSWORD": os.getenv('DB_PASSWORD', 'Lizy@2003'),
+#         "HOST": os.getenv('DB_HOST', '127.0.0.1'),
+#         "PORT": os.getenv('DB_PORT', '5432'),
+#         'CONN_MAX_AGE': 600,
+#         'OPTIONS': {
+#             'connect_timeout': 10,
+#         }
+#     }
+# }
+
+import dj_database_url
+
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.getenv('DB_NAME', 'ai_knowledge_inbox'),
-        "USER": os.getenv('DB_USER', 'postgres'),
-        "PASSWORD": os.getenv('DB_PASSWORD', 'Lizy@2003'),
-        "HOST": os.getenv('DB_HOST', '127.0.0.1'),
-        "PORT": os.getenv('DB_PORT', '5432'),
-        'CONN_MAX_AGE': 600,
-        'OPTIONS': {
-            'connect_timeout': 10,
-        }
-    }
+    'default': dj_database_url.parse(
+        "postgresql://neondb_owner:npg_VRiOzJym5t0w@ep-orange-star-aiz3nzk4-pooler.c-4.us-east-1.aws.neon.tech/neondb?sslmode=require",
+        conn_max_age=600,
+        ssl_require=True
+    )
 }
 
 
@@ -177,6 +188,7 @@ CORS_ALLOW_HEADERS = [
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
 LOGGING = {
