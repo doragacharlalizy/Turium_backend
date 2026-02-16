@@ -139,4 +139,6 @@
  - `services/llm_client.py` contains an adapter to an external LLM provider (OpenAI or similar) and will require API keys.
  - Database defaults in `config/settings.py` will allow local development with SQLite unless `DATABASE_URL` or other settings are changed.
 
- 
+## 🔗 Related Repositories
+
+- **Frontend Application**: [Turium Frontend](https://github.com/doragacharlalizy/Turium_frontend) - React js
